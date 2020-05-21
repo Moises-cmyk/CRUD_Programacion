@@ -1,7 +1,10 @@
 package principal;
 
 import java.awt.Button;
+
+
 import java.awt.Choice;
+import java.awt.Dialog;
 import java.awt.FlowLayout;
 import java.awt.Label;
 import java.awt.TextField;
@@ -26,21 +29,25 @@ public class AltaAsignatura extends Frame implements WindowListener, ActionListe
 	private static final long serialVersionUID = 1L;
 		
 		Label lblNumeroAlumnos = new Label("Numero Alumnos:");
-		TextField txtNumeroAlumnos = new TextField(20);
+		TextField txtNumeroAlumnos = new TextField(30);
 		Label lblDuracion = new Label("Duración Asignatura:");
-		TextField txtDuracion = new TextField(20);
+		TextField txtDuracion = new TextField(30);
 		Label lblExamenes = new Label("Fecha Examenes:");
-		TextField txtExamenes = new TextField(20);
+		TextField txtExamenes = new TextField(30);
 		Label lblPracticas = new Label("Fecha Practicas:");
-		TextField txtPracticas = new TextField(20);
+		TextField txtPracticas = new TextField(30);
 		Label lblNumero = new Label("Número Profesores:");
-		TextField txtNumero = new TextField(20);
+		TextField txtNumero = new TextField(30);
 		Label lblProfesor = new Label("Profesor:");
 		Choice choProfesor = new Choice();
 		Button btnAceptar = new Button("Aceptar");
 		Button btnLimpiar = new Button("Limpiar");
+		Dialog dlgcorrecto;
+		Dialog dlgIncorrecto;
 		
-		public AltaAsignatura()
+		
+		
+		 AltaAsignatura()
 		{
 			setTitle("Alta Asignatura");
 			setLayout(new FlowLayout());
@@ -80,13 +87,14 @@ public class AltaAsignatura extends Frame implements WindowListener, ActionListe
 			}
 			//Cerrar la conexión
 			desconectar(con);
+			add(lblProfesor);
 			add(choProfesor);
 			add(btnAceptar);
 			add(btnLimpiar);
 			btnAceptar.addActionListener(this);
 			btnLimpiar.addActionListener(this);
 			addWindowListener(this);
-			setSize(250,400);
+			setSize(300,400);
 			setResizable(false);
 			setLocationRelativeTo(null);
 			setVisible(true);
@@ -94,11 +102,11 @@ public class AltaAsignatura extends Frame implements WindowListener, ActionListe
 		}
 	
 	
-		public static void main(String[] args) 
-		{
+		//public static void main(String[] args) 
+		//{
 
-			new AltaAsignatura();
-	    }
+			//new AltaAsignatura();
+	    //}
 		@Override
 		public void actionPerformed(ActionEvent e)
 		{
@@ -132,10 +140,33 @@ public class AltaAsignatura extends Frame implements WindowListener, ActionListe
 				//Mostramos resultado
 				if(respuesta == 0)
 				{
-					System.out.println("ALTA de empleado correcta");
+				
+					dlgcorrecto = new Dialog(this,"Correcto", true);
+					Label lblEtiqueta = new Label("Alta realizado con éxito");
+					dlgcorrecto.setLayout(new FlowLayout());
+					//Tamaño del layout (ancho y largo) del dialog
+					dlgcorrecto.setSize(200,100);
+					dlgcorrecto.add(lblEtiqueta);
+					dlgcorrecto.addWindowListener(this);
+					dlgcorrecto.setResizable(false);
+					dlgcorrecto.setLocationRelativeTo(null);
+					dlgcorrecto.setVisible(true);
+					
 				}
-				else
+				
+				
+				else 
 				{
+					dlgIncorrecto = new Dialog(this,"incorrecto", true);
+					Label lblEtiqueta1 = new Label("Error en el alta");
+					dlgIncorrecto.setLayout(new FlowLayout());
+					//Tamaño del layout (ancho y largo) del dialog
+					dlgIncorrecto.setSize(200,100);
+					dlgIncorrecto.add(lblEtiqueta1);
+					dlgIncorrecto.addWindowListener(this);
+					dlgIncorrecto.setResizable(false);
+					dlgIncorrecto.setLocationRelativeTo(null);
+					dlgIncorrecto.setVisible(true);
 					System.out.println("Error en ALTA de empleado");
 				}
 				desconectar(con);
@@ -143,6 +174,8 @@ public class AltaAsignatura extends Frame implements WindowListener, ActionListe
 
 		}
 		
+
+ 
 
 
 		@Override
@@ -157,8 +190,18 @@ public class AltaAsignatura extends Frame implements WindowListener, ActionListe
 		}
 		@Override
 		public void windowClosing(WindowEvent e) {
-			// TODO Auto-generated method stub
-			 System.exit(0);
+			
+			//if (dlgcorrecto.isActive()) {
+				//dlgcorrecto.setVisible(false);
+			//}
+			 //if (dlgIncorrecto.isActive()) {
+				//dlgIncorrecto.setVisible(false);
+			//}
+
+	         //else
+			//{
+				setVisible(false);
+			//}
 		}
 		@Override
 		public void windowDeactivated(WindowEvent e) {
@@ -181,11 +224,7 @@ public class AltaAsignatura extends Frame implements WindowListener, ActionListe
 			
 		}
 		
-		private int insertar(Connection con, String string, int parseInt, int parseInt2, String text, String text2,
-				int parseInt3, String string2) {
-			// TODO Auto-generated method stub
-			return 0;
-		}
+		
 		
 		private Connection conectar() {
 			String driver = "com.mysql.jdbc.Driver";
@@ -210,9 +249,10 @@ public class AltaAsignatura extends Frame implements WindowListener, ActionListe
 			}
 			return con;
 			}
-		public int insertar(Connection con, String Asignatura, String nAlumnosAsignatura, String DuracionAsignatura,
-				String FechaExamenesAsignatura, String FechaPracticasAsignatura, String nProfesorAsignatura,
-				String idProfesorFK1) {
+
+		private int insertar(Connection con, String Asignatura, int nAlumnosAsignatura, int DuracionAsignatura, String FechaExamenesAsignatura, String FechaPracticasAsignatura,
+				int nProfesorAsignatura, String idProfesorFK1)
+		 {
 			int respuesta = 0;
 			try {
 				// Creamos un STATEMENT para una consulta SQL INSERT.
@@ -230,7 +270,7 @@ public class AltaAsignatura extends Frame implements WindowListener, ActionListe
 				ex.printStackTrace();
 				respuesta = 1;
 			}
-			return respuesta;
+			return  respuesta;
 		}
 
 		public void desconectar(Connection con) {

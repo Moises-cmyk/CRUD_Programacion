@@ -1,6 +1,7 @@
 package principal;
 
 import java.awt.Button;
+
 import java.awt.Dialog;
 import java.awt.FlowLayout;
 import java.awt.Frame;
@@ -108,6 +109,8 @@ public class Principal extends Frame implements WindowListener, ActionListener
 			txtClave.selectAll();
 			txtClave.setText("");
 			txtClave.requestFocus();
+			//ficheroLog f = new ficheroLog();
+			//f.metodo("mensaje");
 		}
 		
 		else if (objetoPulsado.equals(btnAceptar))
@@ -133,6 +136,7 @@ public class Principal extends Frame implements WindowListener, ActionListener
 			Connection con = conectar();
 			//Seleccionar
 			String sqlSelect = "SELECT tipoUsuario FROM Usuarios WHERE nombreUsuario='"+usuario+"' AND claveUsuario='"+clave+"'";
+
 			try
 			{
 				//CREAR UN STATEMENT PARA UNA CONSULTA SELECT
@@ -144,28 +148,37 @@ public class Principal extends Frame implements WindowListener, ActionListener
 					//Si el usuario y la contraseña son correctas, nos aparecerá un diálogo de confirmación
 					//Donde le daremos al botón de continuar, para acabar accediendo al menú
 					
-					    dlgCorrecto.setVisible(true);
+					   // dlgCorrecto.setVisible(true);
 					    
-					    if(objetoPulsado.equals(btnSi))
-						{
+					    //if(objetoPulsado.equals(btnSi))
+						//{
 							
-					        new menu();
+							   new Administrador();
+					
+						//}
+							//else if("tipoUsuario".equals("usuario"))
+							//{
+								//new menuUsuario();
+							//}
 					      
-						}
+						//}
 					
 					
 					}
+				
+
 				
 				
 				else // No hay--> Usuario y/o clave erróneos
 				{
 					
-					dlgError.setVisible(true);
+					//dlgError.setVisible(true);
 					
-					if(objetoPulsado.equals(btnNo))
-					{
-						dlgError.setVisible(false);
-					}
+					//if(objetoPulsado.equals(btnNo))
+					//{
+						//dlgError.setVisible(false);
+					//}
+					new Usuarios();
 				}
 			}
 			catch(SQLException ex)
@@ -173,14 +186,11 @@ public class Principal extends Frame implements WindowListener, ActionListener
 				System.out.println("No funciona");
 			}
 
+		
+				
+				
 		}
 	}
-
-
-
-
-	
-
 
 
 	@Override
@@ -205,10 +215,7 @@ public class Principal extends Frame implements WindowListener, ActionListener
 	@Override
 	public void windowClosing(WindowEvent e) 
 	{
-		if(dlgCorrecto.isActive())
-		{
-			dlgCorrecto.setVisible(false);
-		}
+		
 		System.exit(0);
 		
 	}

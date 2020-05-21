@@ -3,5 +3,15 @@
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="lib" path="Lib/mysql-connector-java-5.1.48-bin.jar"/>
+	<classpathentry kind="lib" path="C:/Users/moise/Desktop/itex.2/itext5-itextpdf-5.5.11.jar"/>
+	<classpathentry kind="lib" path="C:/Users/moise/Desktop/itex.2/itext5-itextpdf-5.5.11-javadoc.jar"/>
+	<classpathentry kind="lib" path="C:/Users/moise/Desktop/itex.2/itext5-itextpdf-5.5.11-sources.jar"/>
+	<classpathentry kind="lib" path="C:/Users/moise/Desktop/itex.2/itext5-itext-pdfa-5.5.11.jar"/>
+	<classpathentry kind="lib" path="C:/Users/moise/Desktop/itex.2/itext5-itext-pdfa-5.5.11-javadoc.jar"/>
+	<classpathentry kind="lib" path="C:/Users/moise/Desktop/itex.2/itext5-itext-pdfa-5.5.11-sources.jar"/>
+	<classpathentry kind="lib" path="C:/Users/moise/Desktop/itex.2/itext5-itext-xtra-5.5.11.jar"/>
+	<classpathentry kind="lib" path="C:/Users/moise/Desktop/itex.2/itext5-itext-xtra-5.5.11-javadoc.jar"/>
+	<classpathentry kind="lib" path="C:/Users/moise/Desktop/itex.2/itext5-itext-xtra-5.5.11-sources.jar"/>
+	<classpathentry kind="lib" path="C:/Users/moise/Desktop/itex.2/itext5-xmlworker-5.5.11.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
