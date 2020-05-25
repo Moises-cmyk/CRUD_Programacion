@@ -154,6 +154,7 @@ public class Principal extends Frame implements WindowListener, ActionListener
 						//{
 							
 							   new Administrador();
+							   ficheroLog.metodo("usuario", "Adaministrador");
 					
 						//}
 							//else if("tipoUsuario".equals("usuario"))
@@ -179,6 +180,7 @@ public class Principal extends Frame implements WindowListener, ActionListener
 						//dlgError.setVisible(false);
 					//}
 					new Usuarios();
+					ficheroLog.metodo("usuario", "Usuarios");
 				}
 			}
 			catch(SQLException ex)

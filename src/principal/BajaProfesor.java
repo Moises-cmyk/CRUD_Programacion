@@ -70,11 +70,11 @@ public class BajaProfesor extends Frame implements WindowListener, ActionListene
 	}
 	
 	
-	//public static void main(String[] args) 
-	//{
-		//new BajaProfesor();
+	public static void main(String[] args) 
+	{
+		new BajaProfesor();
 
-	//}
+	}
 
 	@Override
 	public void actionPerformed(ActionEvent e) 
@@ -116,6 +116,7 @@ public class BajaProfesor extends Frame implements WindowListener, ActionListene
 						// Borrar
 						String[] Profesor =choProfesor.getSelectedItem().split("-");
 						int respuesta = borrar(con, Integer.parseInt(Profesor[0]));
+						ficheroLog.metodo("usuario", "BajaProfesor");
 						// Mostramos resultado
 						if(respuesta == 0)
 						{

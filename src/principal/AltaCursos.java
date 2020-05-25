@@ -45,11 +45,11 @@ public class AltaCursos extends Frame implements WindowListener, ActionListener
 		setVisible(true);
 		addWindowListener(this);
 	}
-	//public static void main(String[] args) 
-	//{
-		//new AltaCursos();
+	public static void main(String[] args) 
+	{
+		new AltaCursos();
 
-	//}
+	}
 
 	@Override
 	public void actionPerformed(ActionEvent e)
@@ -72,10 +72,11 @@ public class AltaCursos extends Frame implements WindowListener, ActionListener
 				Connection con = conectar();
 				//Hacer el INSERT
 				int respuesta = insertar(con, "Curso",Integer.parseInt(txtCurso.getText()),Integer.parseInt(txtAlumnos.getText()));
-
+				ficheroLog.metodo("usuario", "AltaCursos");
 				//Mostramos resultado
 				if(respuesta == 0)
 				{
+					
 					System.out.println("ALTA de empleado correcta");
 				}
 				else
@@ -166,6 +167,7 @@ public class AltaCursos extends Frame implements WindowListener, ActionListener
 			Statement sta = con.createStatement();
 			String cadenaSQL = "INSERT INTO " + Curso + " (`nCurso`,`nAlumnosCursos`) "
 												+ "VALUES ('" +nCurso + "', '" + nAlumnosCursos+  "')";
+			
 			
 			System.out.println(cadenaSQL);
 			sta.executeUpdate(cadenaSQL);

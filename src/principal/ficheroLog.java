@@ -13,13 +13,13 @@ public class ficheroLog {
 		Calendar hoy = Calendar.getInstance();
 		try {
 			// Destino de los datos 
-			FileWriter fw = new FileWriter("movimientos.log");
+			FileWriter fw = new FileWriter("movimientos.log",true);
 			// Buffer de escritura 
 			BufferedWriter bw = new BufferedWriter(fw);
 			// Objeto para la escritura 
 			PrintWriter salida = new PrintWriter(bw); 
 			//Guardamos la primera línea 
-			salida.println("["+ hoy.get(Calendar.DATE)+"]["+ hoy.get(Calendar.MONTH)+"]["+ hoy.get(Calendar.YEAR)+"]["+ hoy.get(Calendar.HOUR_OF_DAY)+"]["+ hoy.get(Calendar.MINUTE)+"]["+ hoy.get(Calendar.SECOND)+"]["+usuario+"]["+mensaje+"]");
+			salida.println("["+ hoy.get(Calendar.DATE)+"-"+ (hoy.get(Calendar.MONTH)+1)+"-"+ hoy.get(Calendar.YEAR)+" "+ hoy.get(Calendar.HOUR_OF_DAY)+":"+ hoy.get(Calendar.MINUTE)+":"+ hoy.get(Calendar.SECOND)+"]["+usuario+"]["+mensaje+"]");
 			//Cerrar objetos
 			salida.close(); 
 			bw.close(); 
@@ -31,11 +31,11 @@ public class ficheroLog {
 		}
 	}
 
-	public static void main(String[] args)
+	/*public static void main(String[] args)
 	{
 		 metodo("usuario1", "mensaje");
 
-	}
+	}*/
 }
 
 

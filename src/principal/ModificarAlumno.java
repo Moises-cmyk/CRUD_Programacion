@@ -1,6 +1,7 @@
 package principal;
 
 import java.awt.Button;
+
 import java.awt.Choice;
 import java.awt.Component;
 import java.awt.Dialog;
@@ -16,9 +17,13 @@ import java.awt.event.ActionEvent;
 import java.awt.event.WindowListener;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+
+import com.mysql.jdbc.exceptions.jdbc4.MySQLIntegrityConstraintViolationException;
+
 import java.awt.event.WindowEvent;
 
 public class ModificarAlumno extends Frame implements WindowListener, ActionListener, ItemListener {
@@ -35,12 +40,13 @@ public class ModificarAlumno extends Frame implements WindowListener, ActionList
 	Label lblCurso = new Label("Curso");
 	Choice choCurso = new Choice();
 	Choice choAlumnos = new Choice();
-	Button btnAceptar = new Button("Aceptar");
+	Button btnAceptar = new Button("Modificar");
 	Button btnBaja = new Button("Baja");
 	Button btnLimpiar = new Button("Limpiar");
 
+	////////////////////////Dialogo de Baja/////////////////////////////////
 	Dialog seguro;
-//	Dialog alta;
+//	Dialog Baja;
 	Button btnSi;
 	Button btnNo;
 
@@ -125,6 +131,7 @@ public class ModificarAlumno extends Frame implements WindowListener, ActionList
 		add(btnBaja);
 		add(btnLimpiar);
 		btnAceptar.addActionListener(this);
+		btnBaja.addActionListener(this);
 		btnLimpiar.addActionListener(this);
 		choAlumnos.addItemListener(this);
 
@@ -170,50 +177,138 @@ public class ModificarAlumno extends Frame implements WindowListener, ActionList
 			txtNotas.setText("");
 			txtNotas.requestFocus();
 			choCurso.select(0);
-		} else if (objetoPulsado.equals(btnAceptar)) {
+		} 
+		 
+		else if (objetoPulsado.equals(btnAceptar)) {
+			
+		
+			
 			String nombre = txtNombre.getText();
 			String apellido = txtApellidos.getText();
-			String edad = txtEdad.getText();
-			String notas = txtNotas.getText();
+			int edad = Integer.parseInt(txtEdad.getText());
+			int notas = Integer.parseInt(txtNotas.getText());
 			String curso = choCurso.getSelectedItem(); // curso="1-5,15"
 			// arrayCho curso.split -
 			String[] arrayCho = curso.split("-");
 			// int idCursoFK = arrayCho[0];
 			String idCursoFK = arrayCho[0];
+			
+			String id= choAlumnos.getSelectedItem(); // curso="1-5,15"
+			// arrayCho curso.split -
+			String[] arrayChos = id.split("-");
+			// int idCursoFK = arrayCho[0];
+			String idAlumno = arrayChos[0];
 
 			try {
 
-				Statement stmt = con.createStatement();
-				int resp = stmt.executeUpdate("UPDATE Alumnos SET NombreAlumnos='" + nombre + "'+ ApellidosAlumnos='"
-						+ apellido + "'+EdadAlumnos='" + edad + "'+NotasAsignaturaAlumnos='" + notas + "'+idCursoFK4='"
-						+ idCursoFK + "'  WHERE NombreAlumnos='" + txtNombre.getText() + "'" + " +ApellidosAlumnos='"
-						+ txtApellidos.getText() + "'+ EdadAlumnos= '" + txtEdad.getText()
-						+ "'+ NotasAsignaturaAlumnos= '" + txtNotas.getText() + "'+idCursoFK4='" + arrayCho[0] + "';");
+				Connection con = conectar();
 				
+				String sql = "UPDATE Alumnos SET"
+						+ " NombreAlumnos=? ,"
+						+ " ApellidosAlumnos=? ,"
+						+ " EdadAlumnos=? , "
+						+ "NotasAsignaturaAlumnos=? ,"
+						+ "idCursoFK4=? "
+						+ "WHERE idAlumnos=? "  ;	
 				
+				PreparedStatement pStatement = con.prepareStatement(sql);
+				ficheroLog.metodo("usuario", "ModificarAlumno");
+				
+		
+				pStatement.setString(6, arrayChos[0]);
+				pStatement.setString(1, txtNombre.getText());
+				pStatement.setString(2, txtApellidos.getText());
+				pStatement.setInt(3, edad);
+				pStatement.setInt(4, notas);
+				pStatement.setString(5, arrayCho[0]);
+				
+				int result = pStatement.executeUpdate();
+				pStatement.close();
+				con.close();
 
-				if (resp > 0) {
+				if (result > 0) {
 
 					correcto.setVisible(true);
 				} else {
 					incorrecto.setVisible(true);
 				}
-
 			}
-
-			catch (SQLException sqle) {
-				System.out.println("Error 2-" + sqle.getMessage());
-				incorrecto.setVisible(true);
-			}
-
-		} else if (objetoPulsado.equals(btnNo)) {
-			seguro.setVisible(false);
+				catch (SQLException sqle) {
+					System.out.println("Error 2-" + sqle.getMessage());
+					incorrecto.setVisible(true);
+				}
 		}
-		desconectar(con);
 
+			
+			else if(objetoPulsado.equals(btnBaja))
+			{
+					seguro = new Dialog(this,"¿Seguro?", true);
+					btnSi = new Button("Sí");
+					btnNo = new Button("No");
+					Label lblEtiqueta = new Label("¿Está seguro de eliminar?");
+					seguro.setLayout(new FlowLayout());
+					//Tamaño del layout (ancho y largo) del dialog
+					seguro.setSize(200,100);
+					btnSi.addActionListener(this);
+					btnNo.addActionListener(this);
+					seguro.add(lblEtiqueta);
+					seguro.add(btnSi);
+					seguro.add(btnNo);
+					seguro.addWindowListener(this);
+					seguro.setResizable(false);
+					seguro.setLocationRelativeTo(null);
+					seguro.setVisible(true);
+				}
+				else if(objetoPulsado.equals(btnNo))
+				{
+					seguro.setVisible(false);
+				}
+				else if(objetoPulsado.equals(btnSi))
+				{
+					// Conectar a BD
+					Connection con = conectar(); 
+					// Borrar
+					String[] Alumno =choAlumnos.getSelectedItem().split("-");
+					int respuesta = borrar(con, Integer.parseInt(Alumno[0]));
+					ficheroLog.metodo("usuario", "BajaAlumno");
+					// Mostramos resultado
+					if(respuesta == 0)
+					{
+						System.out.println("Borrado de Alumno correcto");
+					}
+					else
+					{
+						System.out.println("Error en Alumno ");
+					}
+					// Actualizar el Choice
+					choAlumnos.removeAll();
+					choAlumnos.add("Seleccionar uno...");
+					String sqlSelect = "SELECT * FROM Alumnos";
+					try {
+						// CREAR UN STATEMENT PARA UNA CONSULTA SELECT
+						Statement stmt = con.createStatement();
+						ResultSet rs = stmt.executeQuery(sqlSelect);
+						while (rs.next()) 
+						{
+
+							choAlumnos.add(rs.getInt("idAlumnos") 
+									+ "-" + rs.getString("NombreAlumnos") 
+									+ ", "+ rs.getString("ApellidosAlumnos"));
+						}
+						rs.close();
+						stmt.close();
+					} catch (SQLException ex) {
+						System.out.println("ERROR:al consultar");
+						ex.printStackTrace();
+					}
+					// Desconectar
+					desconectar(con);
+					seguro.setVisible(false);
+				}
 	}
 
 	
+
 
 	@Override
 	public void windowActivated(WindowEvent e) {
@@ -231,13 +326,14 @@ public class ModificarAlumno extends Frame implements WindowListener, ActionList
 	public void windowClosing(WindowEvent e) {
 
 		if (this.isActive()) {
-			// setVisible(false);
-			System.exit(0);
+			
+			setVisible(false);
+			
 		} else {
 
 			correcto.setVisible(false);
 			incorrecto.setVisible(false);
-			// seguro.setVisible(false);
+			seguro.setVisible(false);
 			// alta.setVisible(false);
 		}
 
@@ -290,6 +386,32 @@ public class ModificarAlumno extends Frame implements WindowListener, ActionList
 		}
 		return con;
 	}
+	
+
+	private int borrar(Connection con, int idAlumnos) {
+		int respuesta = 0;
+		String sql = "DELETE FROM alumnos WHERE idAlumnos = " + idAlumnos;
+		System.out.println(sql);
+		try 
+		{
+			// Creamos un STATEMENT para una consulta SQL INSERT.
+			Statement sta = con.createStatement();
+			sta.executeUpdate(sql);
+			sta.close();
+		} 
+		catch(MySQLIntegrityConstraintViolationException fk)
+		{
+			System.out.println("ERROR:No se puede dar de baja al alumno");
+			respuesta = 1;
+		}
+		catch (SQLException ex) 
+		{
+			System.out.println("ERROR:al hacer un Delete");
+			ex.printStackTrace();
+			respuesta = 1;
+		}
+		return respuesta;
+	}
 
 	public void desconectar(Connection con) {
 		try {
@@ -337,26 +459,25 @@ public class ModificarAlumno extends Frame implements WindowListener, ActionList
 	
 
 		
-	
-		
+		String sqlSelect3 = "SELECT idCurso,nCurso,nAlumnosCursos  FROM  Curso WHERE idCurso = "+idCursoFK;
+
 			try {
 				// Con Statement procesamos la sentencia SQL
-				Statement stmt2 = con.createStatement();
+				Statement stmt3 = con2.createStatement();
 				// Guardamos la sentencia
-				ResultSet rs2 = stmt2.executeQuery(sqlSelect2);
+				ResultSet rs3 = stmt3.executeQuery(sqlSelect3);
 				// Seleccionar el elemento concreto del Choice
 				
 				// Recorrer el Choice
-				// Y si coninicide con el idCursoFK4, seleccionar ese elemento del choice
-				while(rs2.next()) {
-					if(rs2.getString("idAlumnos").equals("idCursoFK"))
-					{
+				// Y si coninicide con el idCursoFK, seleccionar ese elemento del choice
+				while(rs3.next()) {
+					
 					choCurso.select(
-							rs2.getString("idCursoFK4") + "-" + rs2.getInt("nCurso") + "," + rs2.getInt("nAlumnosCurso"));
-					}
+							rs3.getString("idCurso") + "-" + rs3.getInt("nCurso") + "," + rs3.getInt("nAlumnosCursos"));
+					
 				}
-				rs2.close();
-				stmt2.close();
+				rs3.close();
+				stmt3.close();
 			} catch (SQLException ex) {
 				System.out.println("Error: al consultar");
 				ex.printStackTrace();

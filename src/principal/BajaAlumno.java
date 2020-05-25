@@ -119,14 +119,15 @@ public class BajaAlumno  extends Frame implements WindowListener, ActionListener
 							// Borrar
 							String[] Alumno =choAlumno.getSelectedItem().split("-");
 							int respuesta = borrar(con, Integer.parseInt(Alumno[0]));
+							ficheroLog.metodo("usuario", "BajaAlumno");
 							// Mostramos resultado
 							if(respuesta == 0)
 							{
-								System.out.println("Borrado de Profesor correcto");
+								System.out.println("Borrado de Alumno correcto");
 							}
 							else
 							{
-								System.out.println("Error en Profesor de empleado");
+								System.out.println("Error en Alumno ");
 							}
 							// Actualizar el Choice
 							choAlumno.removeAll();
@@ -247,7 +248,7 @@ public class BajaAlumno  extends Frame implements WindowListener, ActionListener
 		} 
 		catch(MySQLIntegrityConstraintViolationException fk)
 		{
-			System.out.println("ERROR:No se puede dar de baja esta asignatura");
+			System.out.println("ERROR:No se puede dar de baja al alumno");
 			respuesta = 1;
 		}
 		catch (SQLException ex) 
